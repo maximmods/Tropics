@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "id": "tropics",
+  "version": "0.1.0",
+  "name": "Tropics",
+  "description": "A mod about palm trees and coconuts!",
+  "authors": [ "maximumpower55" ],
+  "contact": {
+    "sources": "https://github.com/maximmods/Tropics",
+    "issues": "https://github.com/maximmods/Tropics/issues",
+    "discord": "https://discord.gg/TchSsQTwct"
+  },
+  "license": "MIT",
+  "icon": "assets/tropics/textures/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [ "me.maximumpower55.tropics.Tropics" ]
+  },
+  "mixins": [ "tropics.mixins.json" ],
+  "accessWidener": "tropics.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "minecraft": ">=1.19",
+    "lib39-core": "*",
+    "lib39-lockpick": "*",
+    "lib39-dessicant": "*",
+    "lib39-crowbar": "*",
+    "fabric-api-base": "*",
+    "fabric-resource-loader-v0": "*",
+    "fabric-registry-sync-v0": "*",
+    "fabric-networking-api-v1": "*",
+    "fabric-lifecycle-events-v1": "*",
+    "fabric-item-groups-v0": "*",
+    "fabric-object-builder-api-v1": "*",
+    "fabric-mining-level-api-v1": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.modrinth": "https://modrinth.com/mod/tropics",
+        "modmenu.discord": "https://discord.gg/TchSsQTwct"
+      }
+    }
+  }
+}

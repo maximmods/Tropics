@@ -1,0 +1,34 @@
+# brachyura
+.brachyura
+build/
+*.jfr
+
+# idea
+
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# vscode
+
+.settings/
+.vscode/
+bin/
+.classpath
+.project
+
+# eclipse
+
+*.launch
+
+# fabric
+
+run/
+/logs/latest.log
+
+# macOS
+
+.DS_Store
+.AppleDouble
+.LSOverride

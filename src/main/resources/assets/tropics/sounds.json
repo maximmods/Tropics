@@ -1,0 +1,6 @@
+{
+  "bonk": {
+    "sounds": ["tropics:bonk"],
+    "subtitle": "subtitles.tropics.bonk"
+  }
+}

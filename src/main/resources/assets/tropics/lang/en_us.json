@@ -1,0 +1,13 @@
+{
+  "itemGroup.tropics.tropics": "Tropics",
+
+  "block.tropics.coconut": "Coconut",
+  "item.tropics.cracked_coconut": "Cracked Coconut",
+  "item.tropics.coconut_shell": "Coconut Shell",
+
+  "item.tropics.icon": "Tropics Icon",
+
+  "subtitles.tropics.bonk": "Bonk!",
+
+  "death.attack.tropics.coconut": "%s was bonked too hard"
+}

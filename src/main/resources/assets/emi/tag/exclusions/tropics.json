@@ -1,0 +1,6 @@
+{
+  "exclusions": [
+    "tropics:prevents_coconut_damage",
+    "tropics:prevents_coconut_crack"
+  ]
+}
