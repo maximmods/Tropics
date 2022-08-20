@@ -6,11 +6,7 @@ import net.minecraft.sounds.SoundEvent;
 
 public class TSounds {
 
-	public static final SoundEvent BONK = create("bonk");
-
-	private static SoundEvent create(String path) {
-		return new SoundEvent(Tropics.id(path));
-	}
+	public static final SoundEvent BONK = new SoundEvent(Tropics.id("bonk"));
 
 	public static void init() {
 		Tropics.AUTOREG.autoRegister(Registry.SOUND_EVENT, TSounds.class, SoundEvent.class);

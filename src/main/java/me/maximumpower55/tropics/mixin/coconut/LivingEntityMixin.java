@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import me.maximumpower55.tropics.init.TItemTags;
+import me.maximumpower55.tropics.init.TTags;
 import me.maximumpower55.tropics.init.TSounds;
 import me.maximumpower55.tropics.mechanics.CoconutDamageSource;
 import net.minecraft.util.RandomSource;
@@ -37,8 +37,8 @@ public abstract class LivingEntityMixin extends Entity {
 	abstract boolean addEffect(MobEffectInstance effectInstance);
 
 	@Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
-	private void shouldBlockCoconutDamage(DamageSource damageSource, float damage, CallbackInfoReturnable<Boolean> cir) {
-		if (damageSource instanceof CoconutDamageSource && getItemBySlot(EquipmentSlot.HEAD).is(TItemTags.PREVENTS_COCONUT_DAMAGE)) {
+	private void tropics$shouldBlockCoconutDamage(DamageSource damageSource, float damage, CallbackInfoReturnable<Boolean> cir) {
+		if (damageSource instanceof CoconutDamageSource && getItemBySlot(EquipmentSlot.HEAD).is(TTags.PREVENTS_COCONUT_DAMAGE)) {
 			hurtHelmet(damageSource, damage);
 			doBonkEffects(damageSource);
 			cir.setReturnValue(false);
@@ -46,7 +46,7 @@ public abstract class LivingEntityMixin extends Entity {
 	}
 
 	@Inject(method = "hurt", at = @At(value = "INVOKE", target = "net/minecraft/world/entity/LivingEntity.markHurt()V"))
-	private void doBonkEffectsWhenHurt(DamageSource damageSource, float damage, CallbackInfoReturnable<Boolean> cir) {
+	private void tropics$doBonkEffectsWhenHurt(DamageSource damageSource, float damage, CallbackInfoReturnable<Boolean> cir) {
 		if (damageSource instanceof CoconutDamageSource) {
 			doBonkEffects(damageSource);
 		}

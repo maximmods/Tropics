@@ -6,7 +6,6 @@ public class CoconutDamageSource extends DamageSource {
 
 	public CoconutDamageSource() {
 		super("tropics.coconut");
-		damageHelmet();
 	}
 
 }

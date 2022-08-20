@@ -2,5 +2,3 @@ accessWidener v1 named
 
 extendable method net/minecraft/world/level/block/state/BlockBehaviour$Properties <init> (Lnet/minecraft/world/level/material/Material;Ljava/util/function/Function;)V
 extendable method net/minecraft/world/level/block/state/BlockBehaviour$Properties <init> (Lnet/minecraft/world/level/material/Material;Lnet/minecraft/world/level/material/MaterialColor;)V
-
-mutable field net/minecraft/world/item/Item category Lnet/minecraft/world/item/CreativeModeTab;

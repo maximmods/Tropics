@@ -3,19 +3,25 @@ package me.maximumpower55.tropics.mixin.coconut;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
+
+import me.maximumpower55.tropics.accessor.FallingBlockEntityExtensions;
 import me.maximumpower55.tropics.content.block.CoconutBlock;
-import me.maximumpower55.tropics.duck.TropicsFallingBlockEntity;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 @Mixin(FallingBlockEntity.class)
-public abstract class FallingBlockEntityMixin implements TropicsFallingBlockEntity {
+public abstract class FallingBlockEntityMixin extends Entity implements FallingBlockEntityExtensions {
+
+	private FallingBlockEntityMixin(EntityType<?> entityType, Level level) {
+		super(entityType, level);
+	}
 
 	private boolean tropics$shouldCrack = false;
 
@@ -27,24 +33,23 @@ public abstract class FallingBlockEntityMixin implements TropicsFallingBlockEnti
 	@Shadow
 	private BlockState blockState;
 
-	@Redirect(method = "tick", at = @At(value = "INVOKE", target = "net/minecraft/world/level/block/state/BlockState.canSurvive(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;)Z"))
-	private boolean shouldBreakCoconut(BlockState self, LevelReader level, BlockPos pos) {
+	@ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "net/minecraft/world/level/block/state/BlockState.canSurvive(Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;)Z"))
+	private boolean tropics$shouldBreakCoconut(boolean original) {
 		if (blockState.getBlock() instanceof CoconutBlock coconut) {
-			return !coconut.shouldBreak(level, pos);
+			return !coconut.shouldBreak(level, blockPosition());
 		}
 
-		return self.canSurvive(level, pos);
+		return original;
 	}
 
-	@Redirect(method = "tick", at = @At(value = "INVOKE", target = "net/minecraft/world/entity/item/FallingBlockEntity.spawnAtLocation(Lnet/minecraft/world/level/ItemLike;)Lnet/minecraft/world/entity/item/ItemEntity;"))
-	private ItemEntity shouldDropCrackedCoconuts(FallingBlockEntity self, ItemLike item) {
-		BlockState state = self.getBlockState();
-
-		if (tropics$shouldCrack && state.getBlock() instanceof CoconutBlock coconut) {
-			return self.spawnAtLocation(coconut.getLoot(state));
+	@WrapWithCondition(method = "tick", at = @At(value = "INVOKE", target = "net/minecraft/world/entity/item/FallingBlockEntity.spawnAtLocation(Lnet/minecraft/world/level/ItemLike;)Lnet/minecraft/world/entity/item/ItemEntity;"))
+	private boolean tropics$dropCrackedCoconuts(FallingBlockEntity self, ItemLike item) {
+		if (tropics$shouldCrack && blockState.getBlock() instanceof CoconutBlock coconut) {
+			spawnAtLocation(coconut.getLoot(blockState));
+			return false;
 		}
 
-		return self.spawnAtLocation(item);
+		return true;
 	}
 
 }

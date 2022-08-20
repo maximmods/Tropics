@@ -1,7 +1,7 @@
 package me.maximumpower55.tropics.init;
 
 import me.maximumpower55.tropics.Tropics;
-import me.maximumpower55.tropics.mixin.accessor.ItemAccessor;
+import me.maximumpower55.tropics.accessor.ItemExtensions;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +19,7 @@ public class TItemGroups {
 			ResourceLocation id = Registry.ITEM.getKey(item);
 
 			if (id != null && id.getNamespace().equals("tropics")) {
-				((ItemAccessor)item).tropics$setGroup(MAIN);
+				((ItemExtensions)item).tropics$setGroup(MAIN);
 			}
 		});
 	}

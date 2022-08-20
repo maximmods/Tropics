@@ -3,9 +3,9 @@ package me.maximumpower55.tropics.content.block;
 import com.google.common.collect.ImmutableMap;
 import com.unascribed.lib39.dessicant.api.SimpleLootBlock;
 
-import me.maximumpower55.tropics.duck.TropicsFallingBlockEntity;
-import me.maximumpower55.tropics.init.TBlockTags;
+import me.maximumpower55.tropics.accessor.FallingBlockEntityExtensions;
 import me.maximumpower55.tropics.init.TItems;
+import me.maximumpower55.tropics.init.TTags;
 import me.maximumpower55.tropics.mechanics.CoconutDamageSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -72,10 +72,8 @@ public class CoconutBlock extends HorizontalDirectionalBlock implements SimpleWa
 	@Override
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
 								 BlockHitResult hit) {
-		if (!state.getValue(ATTACHED)) {
-			ItemStack stack = new ItemStack(TItems.COCONUT);
-
-			if (player.getItemInHand(hand).isEmpty() && player.getInventory().add(stack)) {
+		if (player.getAbilities().mayBuild && player.getItemInHand(hand).isEmpty() && !state.getValue(ATTACHED)) {
+			if (player.getInventory().add(new ItemStack(TItems.COCONUT))) {
 				if (!level.isClientSide) level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 
 				// Pitch calculation code copied from ItemEntity
@@ -167,7 +165,7 @@ public class CoconutBlock extends HorizontalDirectionalBlock implements SimpleWa
 	}
 
 	public boolean shouldBreak(BlockGetter level, BlockPos pos) {
-		boolean shouldBreak = !level.getBlockState(pos.below()).is(TBlockTags.PREVENTS_COCONUT_CRACK);
+		boolean shouldBreak = !level.getBlockState(pos.below()).is(TTags.PREVENTS_COCONUT_CRACK);
 		shouldBreak = level.getFluidState(pos).is(FluidTags.WATER) ? false : shouldBreak;
 		return shouldBreak;
 	}
@@ -175,9 +173,9 @@ public class CoconutBlock extends HorizontalDirectionalBlock implements SimpleWa
 	@Override
 	public void onBrokenAfterFall(Level level, BlockPos pos, FallingBlockEntity fallingBlockEntity) {
 		boolean shouldCrack = shouldBreak(level, pos);
-		((TropicsFallingBlockEntity)fallingBlockEntity).tropics$setShouldCrack(shouldCrack);
+		((FallingBlockEntityExtensions)fallingBlockEntity).tropics$setShouldCrack(shouldCrack);
 
-		level.playSound(null, pos, soundType.getBreakSound(), SoundSource.BLOCKS, 0.4f, 1.3f);
+		if (shouldCrack) level.playSound(null, pos, soundType.getBreakSound(), SoundSource.BLOCKS, 0.4f, 1.3f);
 	}
 
 	@Override

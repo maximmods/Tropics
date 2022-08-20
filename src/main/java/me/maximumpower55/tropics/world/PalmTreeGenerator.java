@@ -1,9 +1,7 @@
 package me.maximumpower55.tropics.world;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-
-import com.google.common.collect.Maps;
 
 import me.maximumpower55.tropics.content.block.CoconutBlock;
 import me.maximumpower55.tropics.init.TBlocks;
@@ -27,10 +25,6 @@ import net.minecraft.world.level.levelgen.Heightmap.Types;
 
 public class PalmTreeGenerator {
 
-	private static final Direction[] horizontalDirections = Direction.stream()
-			.filter(dir -> dir.getAxis() != Direction.Axis.Y)
-			.collect(Collectors.toList()).toArray(Direction[]::new);
-
 	private static final BlockState LOG = Blocks.JUNGLE_LOG.defaultBlockState();
 	private static final BlockState LEAVES = Blocks.JUNGLE_LEAVES.defaultBlockState().setValue(LeavesBlock.DISTANCE, 1);
 	private static final BlockState COCONUT = TBlocks.COCONUT.defaultBlockState().setValue(CoconutBlock.ATTACHED, true);
@@ -38,22 +32,22 @@ public class PalmTreeGenerator {
 	private static final int MIN_STEM_HEIGHT = 6;
 	private static final int MAX_STEM_HEIGHT = 8;
 
-	private static final int LEAVES_LENGTH = 3;
+	private static final int LEAVES_LENGTH = 4;
 
-	private static void generate(LevelAccessor level, MutableBlockPos pos, RandomSource random) {
+	private static void tryGenerate(LevelAccessor level, MutableBlockPos pos, RandomSource random) {
 		BlockState soil = level.getBlockState(pos);
 
-		if (!((soil.is(BlockTags.SAND) || soil.is(BlockTags.DIRT)) && level.getFluidState(pos.above()).isEmpty())) return;
+		if ((!(soil.is(BlockTags.SAND) || soil.is(BlockTags.DIRT))) && !level.getFluidState(pos.above()).isEmpty()) return;
 
 		pos.move(Direction.UP);
 
-		Map<BlockPos, BlockState> plan = Maps.newLinkedHashMap();
+		Map<BlockPos, BlockState> plan = new LinkedHashMap<>();
 		MutableBlockPos cur = pos.mutable();
 
-		Direction facing = Util.getRandom(horizontalDirections, random);
+		Direction facing = Util.getRandom(Direction.values(), random);
+		while (facing.getAxis() == Direction.Axis.Y) facing = Util.getRandom(Direction.values(), random);
 
-		int stemHeight = random.nextInt(MAX_STEM_HEIGHT);
-		if (stemHeight < MIN_STEM_HEIGHT) stemHeight = MIN_STEM_HEIGHT;
+		int stemHeight = random.nextInt(MIN_STEM_HEIGHT, MAX_STEM_HEIGHT);
 
 		boolean isLeaning = false;
 
@@ -65,31 +59,67 @@ public class PalmTreeGenerator {
 				isLeaning = true;
 			}
 
+			if (!canPlace(plan, true, cur, level)) return;
 			plan.put(cur.immutable(), LOG);
 			cur.move(Direction.UP);
 		}
 
 		cur.move(Direction.DOWN);
 
-		for (Direction direction : horizontalDirections) {
-			plan.put(cur.relative(direction).immutable(), COCONUT.setValue(CoconutBlock.FACING, direction));
+		for (Direction direction : Direction.values()) {
+			if (direction.getAxis() == Direction.Axis.Y) continue;
 
-			MutableBlockPos leavesCur = cur.mutable();
-			leavesCur.move(Direction.UP);
+			BlockPos coconutPos = cur.relative(direction).immutable();
+			if (canPlace(plan, true, coconutPos, level)) plan.put(coconutPos, COCONUT.setValue(CoconutBlock.FACING, direction));
 
+			MutableBlockPos leavesCur = cur.above().mutable();
 			plan.put(leavesCur.immutable(), LEAVES);
 			leavesCur.move(direction);
 
 			for (int i = 0; i < LEAVES_LENGTH; i++) {
-				if (i == LEAVES_LENGTH - 1) leavesCur.move(Direction.DOWN);
+				if (!canPlace(plan, false, leavesCur, level)) break;
+
+				if (i == LEAVES_LENGTH - 1) {
+					leavesCur.move(Direction.DOWN);
+
+					BlockPos connectingPos = leavesCur.relative(direction, -1).immutable();
+					if (canPlace(plan, false, connectingPos, level)) plan.put(connectingPos, LEAVES);
+				}
+
 				plan.put(leavesCur.immutable(), LEAVES);
 				leavesCur.move(direction);
+			}
+		}
+
+		MutableBlockPos topLeavesCur = cur.above().mutable();
+
+		if (canPlace(plan, false, topLeavesCur.above(), level)) {
+			topLeavesCur.move(Direction.UP);
+
+			plan.put(topLeavesCur.immutable(), LEAVES);
+
+			for (Direction direction : Direction.values()) {
+				if (direction.getAxis() == Direction.Axis.Y) continue;
+
+				topLeavesCur.move(direction);
+
+				if (canPlace(plan, false, topLeavesCur, level)) plan.put(topLeavesCur.immutable(), LEAVES);
+
+				BlockPos connectingPos = topLeavesCur.below().relative(direction.getClockWise()).immutable();
+				if (canPlace(plan, false, connectingPos, level)) plan.put(connectingPos, LEAVES);
+
+				topLeavesCur.move(direction, -1);
 			}
 		}
 
 		for (Map.Entry<BlockPos, BlockState> block : plan.entrySet()) {
 			level.setBlock(block.getKey(), block.getValue(), 3);
 		}
+	}
+
+	private static boolean canPlace(Map<BlockPos, BlockState> plan, boolean detectSelf, BlockPos pos, LevelAccessor level) {
+		BlockState state = detectSelf ? plan.getOrDefault(pos, level.getBlockState(pos)) : level.getBlockState(pos);
+		return state.isAir() || state.getMaterial().isReplaceable();
 	}
 
 	public static void generateTrees(LevelAccessor level, long seed, ChunkAccess chunk) {
@@ -101,7 +131,6 @@ public class PalmTreeGenerator {
 			int z = random.nextInt(16);
 			random.setDecorationSeed(seed, x, z);
 
-			// Figure out how many allocations this MutableBlockPos really saves?
 			MutableBlockPos pos = new MutableBlockPos(chunk.getPos().getMinBlockX() + x, 0, chunk.getPos().getMinBlockZ() + z);
 			Holder<Biome> biome = level.getBiome(pos);
 
@@ -109,7 +138,11 @@ public class PalmTreeGenerator {
 				int y = chunk.getHeight(Types.OCEAN_FLOOR, x, z);
 				pos.setY(y);
 
-				PalmTreeGenerator.generate(level, pos, random);
+				int surface = chunk.getHeight(Types.WORLD_SURFACE, x, z);
+
+				if (surface - y <= 0) {
+					tryGenerate(level, pos, random);
+				}
 			}
 		}
 	}

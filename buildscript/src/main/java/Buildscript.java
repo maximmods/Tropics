@@ -1,7 +1,12 @@
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 
 import io.github.coolcrabs.brachyura.decompiler.BrachyuraDecompiler;
 import io.github.coolcrabs.brachyura.decompiler.fernflower.FernflowerDecompiler;
+import io.github.coolcrabs.brachyura.fabric.FabricContext;
 import io.github.coolcrabs.brachyura.fabric.FabricLoader;
 import io.github.coolcrabs.brachyura.fabric.FabricMaven;
 import io.github.coolcrabs.brachyura.fabric.SimpleFabricProject;
@@ -17,22 +22,22 @@ import net.fabricmc.mappingio.tree.MappingTree;
 public class Buildscript extends SimpleFabricProject {
 	@Override
 	public int getJavaVersion() {
-		return 17;
+		return Integer.parseInt(Versions.JAVA_VERSION);
 	}
 
 	@Override
 	public @Nullable BrachyuraDecompiler decompiler() {
-		return new FernflowerDecompiler(Maven.getMavenJarDep(QuiltMaven.URL, new MavenId("org.quiltmc:quiltflower:1.8.1")));
+		return new FernflowerDecompiler(Maven.getMavenJarDep(QuiltMaven.URL, new MavenId("org.quiltmc", "quiltflower", Versions.QUILTFLOWER_VERSION)));
 	}
 
 	@Override
 	public FabricLoader getLoader() {
-		return new FabricLoader(FabricMaven.URL, FabricMaven.loader("0.14.9"));
+		return new FabricLoader(FabricMaven.URL, FabricMaven.loader(Versions.FABRIC_LOADER_VERSION));
 	}
 
 	@Override
 	public VersionMeta createMcVersion() {
-		return Minecraft.getVersion("1.19.2");
+		return Minecraft.getVersion(Versions.MINECRAFT_VERSION);
 	}
 
 	@Override
@@ -42,6 +47,8 @@ public class Buildscript extends SimpleFabricProject {
 
 	@Override
 	public void getModDependencies(ModDependencyCollector d) {
+		jij(d.addMaven("https://jitpack.io/", new MavenId("com.github.LlamaLad7", "MixinExtras", Versions.MIXIN_EXTRAS_VERSION), ModDependencyFlag.COMPILE, ModDependencyFlag.RUNTIME));
+
 		for (String[] module : new String[][] {
 			{"fabric-api-base", "0.4.10+e62f51a390"},
 			{"fabric-resource-loader-v0", "0.6.0+6bee109e90"},
@@ -58,13 +65,40 @@ public class Buildscript extends SimpleFabricProject {
 
 		for (String[] module : new String[][] {
 			{"lib39-core"},
-			{"lib39-lockpick"},
 			{"lib39-dessicant"},
 			{"lib39-crowbar"}
 		}) {
-			jij(d.addMaven("https://repo.sleeping.town/", new MavenId("com.unascribed", module[0], "1.1.10"), ModDependencyFlag.COMPILE, ModDependencyFlag.RUNTIME));
+			jij(d.addMaven("https://repo.sleeping.town/", new MavenId("com.unascribed", module[0], Versions.LIB39_VERSION), ModDependencyFlag.COMPILE, ModDependencyFlag.RUNTIME));
 		}
 
-		d.addMaven("https://repo.sleeping.town/", new MavenId("com.unascribed:lucium:1.1"), ModDependencyFlag.RUNTIME);
+		d.addMaven("https://repo.sleeping.town/", new MavenId("com.unascribed", "lucium", Versions.LUCIUM_VERSION), ModDependencyFlag.RUNTIME);
+	}
+
+	@Override
+	protected FabricContext createContext() {
+		return new SimpleFabricContext() {
+			/*
+			When mixin extras loads after mixin,
+			MixinObfuscationProcessorInjection.getSupportedAnnotationTypes() does not contain the additional mixin types.
+			This method override fixes this.
+			*/
+			@Override
+			public List<Path> getCompileDependencies() {
+				ArrayList<Path> before = new ArrayList<>();
+				ArrayList<Path> after = new ArrayList<>();
+
+				for (Path p : super.getCompileDependencies()) {
+					if (p.getFileName().toString().contains("MixinExtras")) {
+						before.add(p);
+					} else {
+						after.add(p);
+					}
+				}
+
+				before.addAll(after);
+
+				return before;
+			}
+		};
 	}
 }
