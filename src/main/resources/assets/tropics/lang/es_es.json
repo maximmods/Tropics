@@ -1,0 +1,13 @@
+{
+  "itemGroup.tropics.tropics": "Tropics",
+
+  "block.tropics.coconut": "Coco",
+  "item.tropics.cracked_coconut": "Coco roto",
+  "item.tropics.coconut_shell": "Cáscara de coco",
+
+  "item.tropics.icon": "Icono de Tropics",
+
+  "subtitles.tropics.bonk": "¡Bonk!",
+
+  "death.attack.tropics.coconut": "%s fue bonkeado muy fuerte"
+}
