@@ -3,7 +3,7 @@ package me.maximumpower55.tropics.content.block;
 import com.google.common.collect.ImmutableMap;
 import com.unascribed.lib39.dessicant.api.SimpleLootBlock;
 
-import me.maximumpower55.tropics.accessor.FallingBlockEntityExtensions;
+import me.maximumpower55.tropics.duck.FallingBlockEntityExtensions;
 import me.maximumpower55.tropics.init.TItems;
 import me.maximumpower55.tropics.init.TTags;
 import me.maximumpower55.tropics.mechanics.CoconutDamageSource;

@@ -56,6 +56,8 @@ public class Buildscript extends SimpleFabricProject {
 			{"fabric-networking-api-v1", "1.2.3+5eb68ef290"},
 			{"fabric-lifecycle-events-v1", "2.1.1+83a8659290"},
 			{"fabric-item-groups-v0", "0.3.27+6bee109e90"},
+			{"fabric-rendering-v1", "1.10.16+aeb40ebe90"},
+			{"fabric-models-v0", "0.3.17+aeb40ebe90"},
 			{"fabric-object-builder-api-v1", "4.0.10+7675279690"},
 			{"fabric-content-registries-v0", "3.2.3+aeb40ebe90"},
 			{"fabric-mining-level-api-v1", "2.1.13+33fbc73890"}
@@ -65,6 +67,7 @@ public class Buildscript extends SimpleFabricProject {
 
 		for (String[] module : new String[][] {
 			{"lib39-core"},
+			{"lib39-ripple"},
 			{"lib39-dessicant"},
 			{"lib39-crowbar"}
 		}) {
@@ -72,6 +75,19 @@ public class Buildscript extends SimpleFabricProject {
 		}
 
 		d.addMaven("https://repo.sleeping.town/", new MavenId("com.unascribed", "lucium", Versions.LUCIUM_VERSION), ModDependencyFlag.RUNTIME);
+
+		// modImplementation "maven.modrinth:kahur:1.21"
+
+		// Kahur
+		d.addMaven("https://api.modrinth.com/maven/", new MavenId("maven.modrinth", "kahur", Versions.KAHUR_VERSION), ModDependencyFlag.COMPILE, ModDependencyFlag.RUNTIME);
+		for (String[] module : new String[][] {
+			{"lib39-lockpick"},
+			{"lib39-recoil"},
+			{"lib39-fractal"},
+			{"lib39-util"}
+		}) {
+			d.addMaven("https://repo.sleeping.town/", new MavenId("com.unascribed", module[0], Versions.LIB39_VERSION), ModDependencyFlag.RUNTIME);
+		}
 	}
 
 	@Override

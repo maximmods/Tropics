@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 
-import me.maximumpower55.tropics.accessor.FallingBlockEntityExtensions;
 import me.maximumpower55.tropics.content.block.CoconutBlock;
+import me.maximumpower55.tropics.duck.FallingBlockEntityExtensions;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.FallingBlockEntity;

@@ -1,7 +1,7 @@
 package me.maximumpower55.tropics.init;
 
 import me.maximumpower55.tropics.Tropics;
-import me.maximumpower55.tropics.accessor.ItemExtensions;
+import me.maximumpower55.tropics.duck.ItemExtensions;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;

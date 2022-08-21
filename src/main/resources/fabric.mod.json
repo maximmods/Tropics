@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tropics",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "name": "Tropics",
   "description": "A mod about palm trees and coconuts!",
   "authors": [ "maximumpower55" ],
@@ -14,7 +14,9 @@
   "icon": "assets/tropics/textures/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": [ "me.maximumpower55.tropics.Tropics" ]
+    "main": [ "me.maximumpower55.tropics.Tropics" ],
+    "client": [ "me.maximumpower55.tropics.client.TropicsClient" ],
+    "lib39:postinit": [ "me.maximumpower55.tropics.TropicsPostInit" ]
   },
   "mixins": [ "tropics.mixins.json" ],
   "accessWidener": "tropics.accesswidener",
@@ -22,10 +24,13 @@
     "fabricloader": ">=0.7.4",
     "minecraft": ">=1.19",
     "lib39-core": "*",
+    "lib39-ripple": "*",
     "lib39-dessicant": "*",
     "lib39-crowbar": "*",
     "fabric-api-base": "*",
     "fabric-resource-loader-v0": "*",
+    "fabric-rendering-v1": "*",
+    "fabric-models-v0": "*",
     "fabric-registry-sync-v0": "*",
     "fabric-networking-api-v1": "*",
     "fabric-lifecycle-events-v1": "*",
