@@ -6,6 +6,8 @@ import com.unascribed.kahur.api.KahurImpactBehavior.ImpactResult;
 import me.maximumpower55.tropics.init.TItems;
 import me.maximumpower55.tropics.init.TSounds;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class TropicsKahurCompat {
@@ -15,7 +17,8 @@ public class TropicsKahurCompat {
 			Level level = shot.getLevel();
 			Vec3 hitPos = hit.getLocation();
 
-			level.playSound(null, hitPos.x(), hitPos.y(), hitPos.z(), TSounds.BONK, shot.getSoundSource(), 1.5f, 1);
+			if (hit instanceof EntityHitResult) level.playSound(null, hitPos.x(), hitPos.y(), hitPos.z(), TSounds.BONK, shot.getSoundSource(), 1.5f, 1);
+			else level.playSound(null, hitPos.x(), hitPos.y(), hitPos.z(), SoundType.WOOD.getBreakSound(), shot.getSoundSource(), 0.4f, 1.3f);
 
 			return ImpactResult.DEFAULT;
 		}, TItems.COCONUT);
