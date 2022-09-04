@@ -1,0 +1,13 @@
+{
+  "itemGroup.tropics.tropics": "Tropene",
+
+  "block.tropics.coconut": "Kokosnøtt",
+  "item.tropics.cracked_coconut": "Sprukket Kokosnøtt",
+  "item.tropics.coconut_shell": "Kokosnøttskall",
+
+  "item.tropics.icon": "Tropene Ikon",
+
+  "subtitles.tropics.bonk": "Bonk!",
+
+  "death.attack.tropics.coconut": "%s ble truffet for hard"
+}
