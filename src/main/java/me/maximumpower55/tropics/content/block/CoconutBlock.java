@@ -7,6 +7,8 @@ import me.maximumpower55.tropics.duck.FallingBlockEntityExtensions;
 import me.maximumpower55.tropics.init.TItems;
 import me.maximumpower55.tropics.init.TTags;
 import me.maximumpower55.tropics.mechanics.CoconutDamageSource;
+import me.maximumpower55.tropics.util.DirectionUtils;
+import me.maximumpower55.tropics.util.VoxelShapeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -37,7 +39,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -48,40 +49,43 @@ public class CoconutBlock extends HorizontalDirectionalBlock implements SimpleWa
 	public static final BooleanProperty ATTACHED = BlockStateProperties.ATTACHED;
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-	private static final VoxelShape SHAPE = Shapes.create(0.25, 0, 0.25, 0.75, 0.5, 0.75);
+	private static final VoxelShape SHAPE = VoxelShapeUtils.horizontallyCenteredBox(8, 0, 8, 8, 8, 8);
+
+	private static final VoxelShape BASE_ATTACHED_SHAPE = SHAPE.move(0, 0.125, 0.25);
 
 	private static final ImmutableMap<Direction, VoxelShape> ATTACHED_SHAPES = ImmutableMap.<Direction, VoxelShape>builder()
-				.put(Direction.NORTH, SHAPE.move(0, 0.125, 0.25))
-				.put(Direction.EAST, SHAPE.move(-0.25, 0.125, 0))
-				.put(Direction.SOUTH, SHAPE.move(0, 0.125, -0.25))
-				.put(Direction.WEST, SHAPE.move(0.25, 0.125, 0))
+				.put(Direction.NORTH, BASE_ATTACHED_SHAPE)
+				.put(Direction.EAST, VoxelShapeUtils.rotate(BASE_ATTACHED_SHAPE, Direction.EAST))
+				.put(Direction.SOUTH, VoxelShapeUtils.rotate(BASE_ATTACHED_SHAPE, Direction.SOUTH))
+				.put(Direction.WEST, VoxelShapeUtils.rotate(BASE_ATTACHED_SHAPE, Direction.WEST))
 				.build();
 
 	public CoconutBlock(Properties properties) {
 		super(properties);
-		registerDefaultState(stateDefinition.any().setValue(ATTACHED, false).setValue(WATERLOGGED, false));
+
+		registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ATTACHED, false).setValue(WATERLOGGED, false));
 	}
 
 	@Override
 	public void onProjectileHit(Level level, BlockState state, BlockHitResult hit, Projectile projectile) {
-		if (state.getValue(ATTACHED)) {
-			fall(state, level, hit.getBlockPos());
-		}
+		if (state.getValue(ATTACHED)) fall(state, level, hit.getBlockPos());
 	}
 
 	@Override
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
 								 BlockHitResult hit) {
-		if (player.getAbilities().mayBuild && player.getItemInHand(hand).isEmpty() && !state.getValue(ATTACHED)) {
-			if (player.getInventory().add(new ItemStack(TItems.COCONUT))) {
-				if (!level.isClientSide) level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+		if (!level.isClientSide && player.getAbilities().mayBuild && player.getItemInHand(hand).isEmpty() && !state.getValue(ATTACHED)) {
+			ItemStack itemStack = new ItemStack(TItems.COCONUT);
 
-				// Pitch calculation code copied from ItemEntity
-				float pitch = (level.random.nextFloat() - level.random.nextFloat()) * 1.4f + 2;
-				level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.2f, pitch);
+			if (player.getInventory().add(itemStack)) {
+				level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+
+				level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2f, (level.random.nextFloat() - level.random.nextFloat()) * 1.4f + 2);
 
 				return InteractionResult.SUCCESS;
-			};
+			} else {
+				return InteractionResult.FAIL;
+			}
 		}
 
 		return InteractionResult.PASS;
@@ -99,6 +103,11 @@ public class CoconutBlock extends HorizontalDirectionalBlock implements SimpleWa
 		}
 
 		return SHAPE;
+	}
+
+	@Override
+	public VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
+		return Shapes.empty();
 	}
 
 	@Override
@@ -138,7 +147,8 @@ public class CoconutBlock extends HorizontalDirectionalBlock implements SimpleWa
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-		Direction facing = ctx.getHorizontalDirection().getOpposite();
+		Direction facing = DirectionUtils.isAlongY(ctx.getClickedFace()) ? Direction.NORTH : ctx.getClickedFace();
+
 		BlockPos attachedPos = ctx.getClickedPos().relative(facing.getOpposite());
 		boolean attached = ctx.getPlayer().getAbilities().instabuild
 			? !FallingBlock.isFree(ctx.getLevel().getBlockState(attachedPos)) : false;
@@ -152,16 +162,6 @@ public class CoconutBlock extends HorizontalDirectionalBlock implements SimpleWa
 	@Override
 	public FluidState getFluidState(BlockState state) {
 		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
-	}
-
-	@Override
-	public PushReaction getPistonPushReaction(BlockState state) {
-		return PushReaction.DESTROY;
-	}
-
-	@Override
-	public boolean isOcclusionShapeFullBlock(BlockState state, BlockGetter level, BlockPos pos) {
-		return false;
 	}
 
 	public boolean shouldBreak(BlockGetter level, BlockPos pos) {

@@ -13,10 +13,7 @@ public class TropicsClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		BuiltinItemRendererRegistry.INSTANCE.register(TItems.COCONUT, CoconutItemRenderer::render);
-		ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> {
-			out.accept(CoconutItemRenderer.COCONUT_MODEL);
-			out.accept(CoconutItemRenderer.COCONUT_GUI_MODEL);
-		});
+		ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> CoconutItemRenderer.registerModels(out));
 
 		SplashTextRegistry.registerStatic("Bonk!");
 	}

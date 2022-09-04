@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import me.maximumpower55.tropics.init.TTags;
 import me.maximumpower55.tropics.init.TSounds;
 import me.maximumpower55.tropics.mechanics.CoconutDamageSource;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -37,7 +39,7 @@ public abstract class LivingEntityMixin extends Entity {
 	abstract boolean addEffect(MobEffectInstance effectInstance);
 
 	@Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
-	private void tropics$shouldBlockCoconutDamage(DamageSource damageSource, float damage, CallbackInfoReturnable<Boolean> cir) {
+	private void tropics$tryBlockCoconutDamage(DamageSource damageSource, float damage, CallbackInfoReturnable<Boolean> cir) {
 		if (damageSource instanceof CoconutDamageSource && getItemBySlot(EquipmentSlot.HEAD).is(TTags.PREVENTS_COCONUT_DAMAGE)) {
 			hurtHelmet(damageSource, damage);
 			doBonkEffects(damageSource);
@@ -57,7 +59,9 @@ public abstract class LivingEntityMixin extends Entity {
 
 		MobEffectInstance effectInstance = new MobEffectInstance(MobEffects.CONFUSION, rand.nextInt(60, 260), rand.nextInt(0, 2), true, true);
 		addEffect(effectInstance);
-		level.playSound(null, getX(), getY(), getZ(), TSounds.BONK, getSoundSource(), 1.5f, 1);
+
+		Vec3 impactPos = getEyePosition().add(0, .5, 0);
+		level.playSound(null, impactPos.x, impactPos.y, impactPos.z, TSounds.BONK, SoundSource.BLOCKS, 1.5f, 1);
 	}
 
 }

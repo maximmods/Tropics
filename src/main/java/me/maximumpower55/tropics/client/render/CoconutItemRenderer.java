@@ -1,5 +1,7 @@
 package me.maximumpower55.tropics.client.render;
 
+import java.util.function.Consumer;
+
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -9,6 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public class CoconutItemRenderer {
@@ -25,7 +28,6 @@ public class CoconutItemRenderer {
 
 		boolean left = transformType == TransformType.FIRST_PERSON_LEFT_HAND || transformType == TransformType.THIRD_PERSON_LEFT_HAND;
 
-		// FIXME: Figure out a better fix than this.
 		poseStack.translate(0.5, 0.5, 0.5);
 
 		if (transformType == TransformType.GUI) {
@@ -37,6 +39,11 @@ public class CoconutItemRenderer {
 		} else {
 			MC.getItemRenderer().render(stack, transformType, left, poseStack, buffer, light, overlay, coconutModel);
 		}
+	}
+
+	public static void registerModels(Consumer<ResourceLocation> out) {
+		out.accept(COCONUT_MODEL);
+		out.accept(COCONUT_GUI_MODEL);
 	}
 
 }

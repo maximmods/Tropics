@@ -1,5 +1,5 @@
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
@@ -20,24 +20,26 @@ import io.github.coolcrabs.brachyura.quilt.QuiltMaven;
 import net.fabricmc.mappingio.tree.MappingTree;
 
 public class Buildscript extends SimpleFabricProject {
+	private Versions versions = new Versions(getProjectDir().resolve("buildscript").resolve("versions.properties"));
+
 	@Override
 	public int getJavaVersion() {
-		return Integer.parseInt(Versions.JAVA_VERSION);
+		return Integer.parseInt(versions.JAVA.get());
 	}
 
 	@Override
 	public @Nullable BrachyuraDecompiler decompiler() {
-		return new FernflowerDecompiler(Maven.getMavenJarDep(QuiltMaven.URL, new MavenId("org.quiltmc", "quiltflower", Versions.QUILTFLOWER_VERSION)));
+		return new FernflowerDecompiler(Maven.getMavenJarDep(QuiltMaven.URL, new MavenId("org.quiltmc", "quiltflower", versions.QUILTFLOWER.get())));
 	}
 
 	@Override
 	public FabricLoader getLoader() {
-		return new FabricLoader(FabricMaven.URL, FabricMaven.loader(Versions.FABRIC_LOADER_VERSION));
+		return new FabricLoader(FabricMaven.URL, FabricMaven.loader(versions.FABRIC_LOADER.get()));
 	}
 
 	@Override
 	public VersionMeta createMcVersion() {
-		return Minecraft.getVersion(Versions.MINECRAFT_VERSION);
+		return Minecraft.getVersion(versions.MINECRAFT.get());
 	}
 
 	@Override
@@ -47,7 +49,7 @@ public class Buildscript extends SimpleFabricProject {
 
 	@Override
 	public void getModDependencies(ModDependencyCollector d) {
-		jij(d.addMaven("https://jitpack.io/", new MavenId("com.github.LlamaLad7", "MixinExtras", Versions.MIXIN_EXTRAS_VERSION), ModDependencyFlag.COMPILE, ModDependencyFlag.RUNTIME));
+		jij(d.addMaven("https://jitpack.io/", new MavenId("com.github.LlamaLad7", "MixinExtras", versions.MIXIN_EXTRAS.get()), ModDependencyFlag.COMPILE, ModDependencyFlag.RUNTIME));
 
 		for (String[] module : new String[][] {
 			{"fabric-api-base", "0.4.10+e62f51a390"},
@@ -71,22 +73,20 @@ public class Buildscript extends SimpleFabricProject {
 			{"lib39-dessicant"},
 			{"lib39-crowbar"}
 		}) {
-			jij(d.addMaven("https://repo.sleeping.town/", new MavenId("com.unascribed", module[0], Versions.LIB39_VERSION), ModDependencyFlag.COMPILE, ModDependencyFlag.RUNTIME));
+			jij(d.addMaven("https://repo.sleeping.town/", new MavenId("com.unascribed", module[0], versions.LIB39.get()), ModDependencyFlag.COMPILE, ModDependencyFlag.RUNTIME));
 		}
 
-		d.addMaven("https://repo.sleeping.town/", new MavenId("com.unascribed", "lucium", Versions.LUCIUM_VERSION), ModDependencyFlag.RUNTIME);
-
-		// modImplementation "maven.modrinth:kahur:1.21"
+		d.addMaven("https://repo.sleeping.town/", new MavenId("com.unascribed", "lucium", versions.LUCIUM.get()), ModDependencyFlag.RUNTIME);
 
 		// Kahur
-		d.addMaven("https://api.modrinth.com/maven/", new MavenId("maven.modrinth", "kahur", Versions.KAHUR_VERSION), ModDependencyFlag.COMPILE, ModDependencyFlag.RUNTIME);
+		d.addMaven("https://api.modrinth.com/maven/", new MavenId("maven.modrinth", "kahur", versions.KAHUR.get()), ModDependencyFlag.COMPILE, ModDependencyFlag.RUNTIME);
 		for (String[] module : new String[][] {
 			{"lib39-lockpick"},
 			{"lib39-recoil"},
 			{"lib39-fractal"},
 			{"lib39-util"}
 		}) {
-			d.addMaven("https://repo.sleeping.town/", new MavenId("com.unascribed", module[0], Versions.LIB39_VERSION), ModDependencyFlag.RUNTIME);
+			d.addMaven("https://repo.sleeping.town/", new MavenId("com.unascribed", module[0], versions.LIB39.get()), ModDependencyFlag.RUNTIME);
 		}
 	}
 
@@ -100,20 +100,17 @@ public class Buildscript extends SimpleFabricProject {
 			*/
 			@Override
 			public List<Path> getCompileDependencies() {
-				ArrayList<Path> before = new ArrayList<>();
-				ArrayList<Path> after = new ArrayList<>();
+				LinkedList<Path> paths = new LinkedList<>();
 
 				for (Path p : super.getCompileDependencies()) {
 					if (p.getFileName().toString().contains("MixinExtras")) {
-						before.add(p);
+						paths.addFirst(p);
 					} else {
-						after.add(p);
+						paths.addLast(p);
 					}
 				}
 
-				before.addAll(after);
-
-				return before;
+				return paths;
 			}
 		};
 	}
