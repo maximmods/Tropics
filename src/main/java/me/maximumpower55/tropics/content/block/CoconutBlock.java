@@ -1,5 +1,7 @@
 package me.maximumpower55.tropics.content.block;
 
+import java.util.Map;
+
 import com.google.common.collect.ImmutableMap;
 import com.unascribed.lib39.dessicant.api.SimpleLootBlock;
 
@@ -53,7 +55,7 @@ public class CoconutBlock extends HorizontalDirectionalBlock implements SimpleWa
 
 	private static final VoxelShape BASE_ATTACHED_SHAPE = SHAPE.move(0, 0.125, 0.25);
 
-	private static final ImmutableMap<Direction, VoxelShape> ATTACHED_SHAPES = ImmutableMap.<Direction, VoxelShape>builder()
+	private static final Map<Direction, VoxelShape> ATTACHED_SHAPES = ImmutableMap.<Direction, VoxelShape>builder()
 				.put(Direction.NORTH, BASE_ATTACHED_SHAPE)
 				.put(Direction.EAST, VoxelShapeUtils.rotate(BASE_ATTACHED_SHAPE, Direction.EAST))
 				.put(Direction.SOUTH, VoxelShapeUtils.rotate(BASE_ATTACHED_SHAPE, Direction.SOUTH))
@@ -98,10 +100,7 @@ public class CoconutBlock extends HorizontalDirectionalBlock implements SimpleWa
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		if (state.getValue(ATTACHED)) {
-			return ATTACHED_SHAPES.get(state.getValue(FACING));
-		}
-
+		if (state.getValue(ATTACHED)) return ATTACHED_SHAPES.get(state.getValue(FACING));
 		return SHAPE;
 	}
 

@@ -24,7 +24,6 @@
     "fabricloader": ">=0.7.4",
     "minecraft": ">=1.19",
     "lib39-core": "*",
-    "lib39-ripple": "*",
     "lib39-dessicant": "*",
     "lib39-crowbar": "*",
     "fabric-api-base": "*",

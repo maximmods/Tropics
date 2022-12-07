@@ -15,15 +15,12 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 
 public class Tropics implements ModInitializer {
 
 	public static final AutoRegistry AUTOREG = AutoRegistry.of("tropics");
 
-	public static final CreativeModeTab ITEM_GROUP = FabricItemGroupBuilder.build(
-		id("item_group"),
-		() -> new ItemStack(TItems.ICON));
+	public static final CreativeModeTab ITEM_GROUP = FabricItemGroupBuilder.create(id("item_group")).build();
 
 	@Override
 	public void onInitialize() {

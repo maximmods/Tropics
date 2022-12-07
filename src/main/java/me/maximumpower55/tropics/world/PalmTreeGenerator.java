@@ -1,13 +1,10 @@
 package me.maximumpower55.tropics.world;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import me.maximumpower55.tropics.content.block.CoconutBlock;
 import me.maximumpower55.tropics.init.TBlocks;
+import me.maximumpower55.tropics.util.BlockPlot;
 import me.maximumpower55.tropics.util.DirectionUtils;
 import net.minecraft.Util;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -40,8 +37,7 @@ public class PalmTreeGenerator {
 
 		if (!(soil.is(BlockTags.SAND) || soil.is(BlockTags.DIRT)) || !level.getFluidState(pos.above()).isEmpty()) return;
 
-		Map<BlockPos, BlockState> plan = new LinkedHashMap<>();
-		MutableBlockPos cur = pos.above().mutable();
+		BlockPlot cur = new BlockPlot(pos.above(), level);
 
 		Direction facing = Util.getRandom(DirectionUtils.HORIZONTAL_DIRECTIONS, random);
 
@@ -57,63 +53,60 @@ public class PalmTreeGenerator {
 				isLeaning = true;
 			}
 
-			if (!canPlace(plan, true, cur, level)) return;
-			plan.put(cur.immutable(), LOG);
+			if (!cur.tryPlot(LOG)) return;
+
 			cur.move(Direction.UP);
 		}
 
-		cur.move(Direction.DOWN);
+		cur.tryPlot(LEAVES, true);
 
+		cur.push();
 		for (Direction dir : DirectionUtils.HORIZONTAL_DIRECTIONS) {
-			BlockPos coconutPos = cur.relative(dir).immutable();
-			if (canPlace(plan, true, coconutPos, level)) plan.put(coconutPos, COCONUT.setValue(CoconutBlock.FACING, dir));
+			cur.push();
+			cur.move(Direction.DOWN).move(dir);
+			cur.tryPlot(COCONUT.setValue(CoconutBlock.FACING, dir), false);
+			cur.pop();
 
-			MutableBlockPos leavesCur = cur.above().mutable();
-			plan.put(leavesCur.immutable(), LEAVES);
-			leavesCur.move(dir);
+			cur.push();
+			cur.move(dir);
 
-			for (int i = 0; i < LEAVES_LENGTH; i++) {
-				if (!canPlace(plan, false, leavesCur, level)) break;
+			leaves: for (int i = 0; i < LEAVES_LENGTH; i++) {
+				if (!cur.canPlot(true)) break leaves;
 
 				if (i == LEAVES_LENGTH - 1) {
-					leavesCur.move(Direction.DOWN);
+					cur.move(Direction.DOWN);
 
-					BlockPos connectingPos = leavesCur.relative(dir, -1).immutable();
-					if (canPlace(plan, false, connectingPos, level)) plan.put(connectingPos, LEAVES);
+					cur.push();
+					cur.move(dir, -1);
+					cur.tryPlot(LEAVES, true);
+					cur.pop();
 				}
 
-				plan.put(leavesCur.immutable(), LEAVES);
-				leavesCur.move(dir);
+				cur.tryPlot(LEAVES, true);
+
+				cur.move(dir);
 			}
+			cur.pop();
 		}
+		cur.pop();
 
-		MutableBlockPos topLeavesCur = cur.above().mutable();
-
-		if (canPlace(plan, false, topLeavesCur.above(), level)) {
-			topLeavesCur.move(Direction.UP);
-
-			plan.put(topLeavesCur.immutable(), LEAVES);
-
+		cur.push();
+		cur.move(Direction.UP);
+		if (cur.tryPlot(LEAVES, true)) {
 			for (Direction dir : DirectionUtils.HORIZONTAL_DIRECTIONS) {
-				topLeavesCur.move(dir);
+				cur.push();
+				cur.move(dir);
+				cur.tryPlot(LEAVES, true);
 
-				if (canPlace(plan, false, topLeavesCur, level)) plan.put(topLeavesCur.immutable(), LEAVES);
-
-				BlockPos connectingPos = topLeavesCur.below().relative(dir.getClockWise()).immutable();
-				if (canPlace(plan, false, connectingPos, level)) plan.put(connectingPos, LEAVES);
-
-				topLeavesCur.move(dir, -1);
+				cur.move(dir.getClockWise());
+				cur.move(Direction.DOWN);
+				cur.tryPlot(LEAVES, true);
+				cur.pop();
 			}
 		}
+		cur.pop();
 
-		for (Map.Entry<BlockPos, BlockState> block : plan.entrySet()) {
-			level.setBlock(block.getKey(), block.getValue(), 3);
-		}
-	}
-
-	private static boolean canPlace(Map<BlockPos, BlockState> plan, boolean detectSelf, BlockPos pos, LevelAccessor level) {
-		BlockState state = detectSelf ? plan.getOrDefault(pos, level.getBlockState(pos)) : level.getBlockState(pos);
-		return state.isAir() || state.getMaterial().isReplaceable();
+		cur.place();
 	}
 
 	public static void generateTrees(LevelAccessor level, long seed, ChunkAccess chunk) {

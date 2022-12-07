@@ -69,14 +69,11 @@ public class Buildscript extends SimpleFabricProject {
 
 		for (String[] module : new String[][] {
 			{"lib39-core"},
-			{"lib39-ripple"},
 			{"lib39-dessicant"},
 			{"lib39-crowbar"}
 		}) {
 			jij(d.addMaven("https://repo.sleeping.town/", new MavenId("com.unascribed", module[0], versions.LIB39.get()), ModDependencyFlag.COMPILE, ModDependencyFlag.RUNTIME));
 		}
-
-		d.addMaven("https://repo.sleeping.town/", new MavenId("com.unascribed", "lucium", versions.LUCIUM.get()), ModDependencyFlag.RUNTIME);
 
 		// Kahur
 		d.addMaven("https://api.modrinth.com/maven/", new MavenId("maven.modrinth", "kahur", versions.KAHUR.get()), ModDependencyFlag.COMPILE, ModDependencyFlag.RUNTIME);
@@ -84,6 +81,7 @@ public class Buildscript extends SimpleFabricProject {
 			{"lib39-lockpick"},
 			{"lib39-recoil"},
 			{"lib39-fractal"},
+			{"lib39-ripple"},
 			{"lib39-util"}
 		}) {
 			d.addMaven("https://repo.sleeping.town/", new MavenId("com.unascribed", module[0], versions.LIB39.get()), ModDependencyFlag.RUNTIME);

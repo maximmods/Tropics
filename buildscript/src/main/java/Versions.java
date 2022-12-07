@@ -16,7 +16,7 @@ public class Versions {
 
 	private final Lazy<Properties> properties = new Lazy<>(this::loadProperties);
 
-	Properties loadProperties() {
+	private Properties loadProperties() {
 		try {
 			Properties properties = new Properties();
 
@@ -25,7 +25,7 @@ public class Versions {
 					properties.load(reader);
 				}
 			} else {
-				throw new RuntimeException("Couldn't find versions.properties.");
+				throw new RuntimeException("Couldn't find versions.properties");
 			}
 
 			return properties;
@@ -41,7 +41,6 @@ public class Versions {
 
 	public final Version MIXIN_EXTRAS = new Version("mixin_extras", properties);
 	public final Version LIB39 = new Version("lib39", properties);
-	public final Version LUCIUM = new Version("lucium", properties);
 
 	public final Version KAHUR = new Version("kahur", properties);
 }
