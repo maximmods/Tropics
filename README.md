@@ -8,7 +8,7 @@
 
 **[Fabric API][fapi] or [QFAPI / QSL][qsl] is required.**
 
-Tropics is an little mod about about palm trees and coconuts for Fabric & Quilt 1.19-1.19.2.
+Tropics is an little mod about about palm trees and coconuts for Fabric & Quilt 1.20-1.20.1.
 
 [fapi]: https://modrinth.com/mod/fabric-api
 [qsl]: https://modrinth.com/mod/qsl
