@@ -3,13 +3,11 @@ package me.maximumpower55.tropics.content.block;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
-import com.unascribed.lib39.dessicant.api.SimpleLootBlock;
 
 import me.maximumpower55.tropics.duck.FallingBlockEntityExtensions;
 import me.maximumpower55.tropics.init.TItems;
 import me.maximumpower55.tropics.init.TTags;
 import me.maximumpower55.tropics.mechanics.CoconutDamageSource;
-import me.maximumpower55.tropics.util.DirectionUtils;
 import me.maximumpower55.tropics.util.VoxelShapeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,6 +19,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -46,15 +45,13 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CoconutBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, Fallable, SimpleLootBlock {
+public class CoconutBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, Fallable {
 
 	public static final BooleanProperty ATTACHED = BlockStateProperties.ATTACHED;
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
 	private static final VoxelShape SHAPE = VoxelShapeUtils.horizontallyCenteredBox(8, 0, 8, 8, 8, 8);
-
 	private static final VoxelShape BASE_ATTACHED_SHAPE = SHAPE.move(0, 0.125, 0.25);
-
 	private static final Map<Direction, VoxelShape> ATTACHED_SHAPES = ImmutableMap.<Direction, VoxelShape>builder()
 				.put(Direction.NORTH, BASE_ATTACHED_SHAPE)
 				.put(Direction.EAST, VoxelShapeUtils.rotate(BASE_ATTACHED_SHAPE, Direction.EAST))
@@ -140,13 +137,13 @@ public class CoconutBlock extends HorizontalDirectionalBlock implements SimpleWa
 	}
 
 	@Override
-	public DamageSource getFallDamageSource() {
-		return new CoconutDamageSource();
+	public DamageSource getFallDamageSource(Entity entity) {
+		return ((CoconutDamageSource.Getter) entity.level().damageSources()).tropics$instance();
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-		Direction facing = DirectionUtils.isAlongY(ctx.getClickedFace()) ? Direction.NORTH : ctx.getClickedFace();
+		Direction facing = ctx.getClickedFace().getAxis() == Direction.Axis.Y ? Direction.NORTH : ctx.getClickedFace();
 
 		BlockPos attachedPos = ctx.getClickedPos().relative(facing.getOpposite());
 		boolean attached = ctx.getPlayer().getAbilities().instabuild
@@ -164,22 +161,17 @@ public class CoconutBlock extends HorizontalDirectionalBlock implements SimpleWa
 	}
 
 	public boolean shouldBreak(BlockGetter level, BlockPos pos) {
-		boolean shouldBreak = !level.getBlockState(pos.below()).is(TTags.PREVENTS_COCONUT_CRACK);
+		boolean shouldBreak = !level.getBlockState(pos.below()).is(TTags.Block.PREVENTS_COCONUT_CRACK);
 		shouldBreak = level.getFluidState(pos).is(FluidTags.WATER) ? false : shouldBreak;
 		return shouldBreak;
 	}
 
 	@Override
 	public void onBrokenAfterFall(Level level, BlockPos pos, FallingBlockEntity fallingBlockEntity) {
-		boolean shouldCrack = shouldBreak(level, pos);
-		((FallingBlockEntityExtensions)fallingBlockEntity).tropics$setShouldCrack(shouldCrack);
-
-		if (shouldCrack) level.playSound(null, pos, soundType.getBreakSound(), SoundSource.BLOCKS, 0.4f, 1.3f);
-	}
-
-	@Override
-	public ItemStack getLoot(BlockState state) {
-		return new ItemStack(TItems.CRACKED_COCONUT, 2);
+		if (shouldBreak(level, pos)) {
+			((FallingBlockEntityExtensions) fallingBlockEntity).tropics$crack();
+			level.playSound(null, pos, soundType.getBreakSound(), SoundSource.BLOCKS, 0.4f, 1.3f);
+		}
 	}
 
 }

@@ -39,8 +39,7 @@ public class Versions {
 	public final Version FABRIC_LOADER = new Version("fabric_loader", properties);
 	public final Version QUILTFLOWER = new Version("quiltflower", properties);
 
-	public final Version MIXIN_EXTRAS = new Version("mixin_extras", properties);
-	public final Version LIB39 = new Version("lib39", properties);
+	public final Version FABRIC_API = new Version("fabric_api", properties);
 
-	public final Version KAHUR = new Version("kahur", properties);
+	public final Version MIXIN_EXTRAS = new Version("mixin_extras", properties);
 }

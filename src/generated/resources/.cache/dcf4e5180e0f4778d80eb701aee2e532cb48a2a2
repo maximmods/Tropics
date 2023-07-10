@@ -1,0 +1,21 @@
+// 1.20.1	2023-07-09T16:20:21.3278653	Tropics/Tags for minecraft:block
+9f6af678df28c995bda402fce387594aaa89d856 data\minecraft\tags\blocks\overworld_natural_logs.json
+74e16ad4e3a2ff1abda3cec640965de9724dad19 data\minecraft\tags\blocks\wooden_fences.json
+74d58d21dd6792cd02c82700dd6cdf1c4d67341f data\minecraft\tags\blocks\wooden_trapdoors.json
+69ac5fdefcc7b13fce4f7e6f26059343f3076884 data\minecraft\tags\blocks\wooden_pressure_plates.json
+91ee34ec4fd8e893b31aec607987f65c3eb42a65 data\minecraft\tags\blocks\wooden_slabs.json
+8558286efac03c663cc80e085ccd398b23e0893b data\minecraft\tags\blocks\logs_that_burn.json
+af3bdc08ea4e96d97d7a67fd3e9d2c2e88d5f8a5 data\minecraft\tags\blocks\standing_signs.json
+d45bed42bbe30cb0d071ecec7350f0c90be2881d data\tropics\tags\blocks\palm_logs.json
+505c313cc8d6f8acba2d69b2f0525ee1b714e022 data\minecraft\tags\blocks\wooden_doors.json
+f429d423ece1e491f409567bbcb0022aea7c4795 data\minecraft\tags\blocks\wooden_stairs.json
+c0fd983ba2422778b9d5dd4b8a86e4d7fd35e206 data\minecraft\tags\blocks\wall_hanging_signs.json
+2598a5b41b5cc6c15f30c8560b65c8c3eff8fa2b data\minecraft\tags\blocks\saplings.json
+116b2b905859c3ee900ea5c8b6c13dae71170657 data\minecraft\tags\blocks\mineable\hoe.json
+1d68d76f00147bd1ec7441f9e78dd6bfdee5b73e data\minecraft\tags\blocks\ceiling_hanging_signs.json
+116b2b905859c3ee900ea5c8b6c13dae71170657 data\minecraft\tags\blocks\leaves.json
+8e0dc3196b6f686e70ff15e7fe5cad49d2c5759b data\minecraft\tags\blocks\wall_signs.json
+5242d9d2810e6bbba621d9882fe71e15036914e4 data\minecraft\tags\blocks\flower_pots.json
+5f689e0a0bbf6d5e0d78c4ba6985fc3682e6c82c data\tropics\tags\blocks\prevents_coconut_crack.json
+37e1817ae10232dc9dfe83bd5b079c5aa2d4df67 data\minecraft\tags\blocks\planks.json
+904d2a57d968f88c49adcb33cd762994b6a8911e data\minecraft\tags\blocks\wooden_buttons.json

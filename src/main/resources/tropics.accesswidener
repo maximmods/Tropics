@@ -1,4 +1,32 @@
 accessWidener v1 named
 
+accessible class net/minecraft/world/item/CreativeModeTab$Output
+
 extendable method net/minecraft/world/level/block/state/BlockBehaviour$Properties <init> (Lnet/minecraft/world/level/material/Material;Ljava/util/function/Function;)V
 extendable method net/minecraft/world/level/block/state/BlockBehaviour$Properties <init> (Lnet/minecraft/world/level/material/Material;Lnet/minecraft/world/level/material/MaterialColor;)V
+accessible method net/minecraft/world/level/block/Blocks never (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/EntityType;)Ljava/lang/Boolean;
+accessible method net/minecraft/world/level/block/StairBlock <init> (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+accessible method net/minecraft/world/level/block/DoorBlock <init> (Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;Lnet/minecraft/world/level/block/state/properties/BlockSetType;)V
+accessible method net/minecraft/world/level/block/ButtonBlock <init> (Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;Lnet/minecraft/world/level/block/state/properties/BlockSetType;IZ)V
+accessible method net/minecraft/world/level/block/PressurePlateBlock <init> (Lnet/minecraft/world/level/block/PressurePlateBlock$Sensitivity;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;Lnet/minecraft/world/level/block/state/properties/BlockSetType;)V
+accessible method net/minecraft/world/level/block/TrapDoorBlock <init> (Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;Lnet/minecraft/world/level/block/state/properties/BlockSetType;)V
+accessible method net/minecraft/data/BlockFamilies familyBuilder (Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/data/BlockFamily$Builder;
+
+accessible method net/minecraft/world/level/block/entity/BlockEntityType$Builder <init> (Lnet/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier;Ljava/util/Set;)V
+accessible field net/minecraft/world/level/block/entity/BlockEntityType$Builder factory Lnet/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier;
+accessible field net/minecraft/world/level/block/entity/BlockEntityType$Builder validBlocks Ljava/util/Set;
+
+accessible method net/minecraft/data/tags/TagsProvider$TagAppender <init> (Lnet/minecraft/tags/TagBuilder;)V
+accessible field net/minecraft/data/tags/TagsProvider builders Ljava/util/Map;
+accessible field net/minecraft/data/models/BlockModelGenerators blockStateOutput Ljava/util/function/Consumer;
+accessible method net/minecraft/data/models/BlockModelGenerators createHorizontalFacingDispatch ()Lnet/minecraft/data/models/blockstates/PropertyDispatch;
+accessible method net/minecraft/data/models/ItemModelGenerators generateFlatItem (Lnet/minecraft/world/item/Item;Lnet/minecraft/data/models/model/ModelTemplate;)V
+accessible method net/minecraft/data/models/BlockModelGenerators createNonTemplateModelBlock (Lnet/minecraft/world/level/block/Block;)V
+accessible method net/minecraft/data/models/BlockModelGenerators delegateItemModel (Lnet/minecraft/world/level/block/Block;Lnet/minecraft/resources/ResourceLocation;)V
+accessible method net/minecraft/data/models/BlockModelGenerators woodProvider (Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/data/models/BlockModelGenerators$WoodProvider;
+accessible class net/minecraft/data/models/BlockModelGenerators$WoodProvider
+accessible method net/minecraft/data/models/BlockModelGenerators family (Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/data/models/BlockModelGenerators$BlockFamilyProvider;
+accessible method net/minecraft/data/models/BlockModelGenerators createTrivialCube (Lnet/minecraft/world/level/block/Block;)V
+accessible class net/minecraft/data/models/BlockModelGenerators$BlockFamilyProvider
+accessible class net/minecraft/data/models/BlockModelGenerators$TintState
+accessible method net/minecraft/data/models/BlockModelGenerators createPlant (Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/block/Block;Lnet/minecraft/data/models/BlockModelGenerators$TintState;)V

@@ -6,8 +6,10 @@ import net.minecraft.core.Direction;
 
 public class DirectionUtils {
 
-	public static final Direction[] HORIZONTAL_DIRECTIONS = Direction.stream().filter(dir -> !isAlongY(dir)).collect(Collectors.toSet()).toArray(new Direction[]{});
-
-	public static boolean isAlongY(Direction dir) { return dir.getAxis() == Direction.Axis.Y; }
+	public static final Direction[] HORIZONTAL_DIRECTIONS = Direction
+		.stream()
+		.filter(dir -> dir.getAxis() != Direction.Axis.Y)
+		.collect(Collectors.toSet())
+		.toArray(new Direction[] {});
 
 }

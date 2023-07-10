@@ -1,9 +1,31 @@
 {
   "itemGroup.tropics.item_group": "Tropics",
 
+  "block.tropics.palm_planks": "Palm Planks",
+  "block.tropics.palm_log": "Palm Log",
+  "block.tropics.palm_wood": "Palm Wood",
+  "block.tropics.stripped_palm_log": "Stripped Palm Log",
+  "block.tropics.stripped_palm_wood": "Stripped Palm Wood",
+  "block.tropics.palm_slab": "Palm Slab",
+  "block.tropics.palm_stairs": "Palm Stairs",
+  "block.tropics.palm_fence": "Palm Fence",
+  "block.tropics.palm_fence_gate": "Palm Fence Gate",
+  "block.tropics.palm_door": "Palm Door",
+  "block.tropics.palm_button": "Palm Button",
+  "block.tropics.palm_pressure_plate": "Palm Pressure Plate",
+  "block.tropics.palm_trapdoor": "Palm Trapdoor",
+  "block.tropics.palm_sign": "Palm Sign",
+  "block.tropics.palm_hanging_sign": "Palm Hanging Sign",
+  "block.tropics.palm_leaves": "Palm Leaves",
+  "block.tropics.palm_sapling": "Palm Sapling",
   "block.tropics.coconut": "Coconut",
+
   "item.tropics.cracked_coconut": "Cracked Coconut",
   "item.tropics.coconut_shell": "Coconut Shell",
+  "item.tropics.palm_boat": "Palm Boat",
+  "item.tropics.palm_chest_boat": "Palm Boat with Chest",
+
+  "tag.tropics.palm_logs": "Palm Logs",
 
   "subtitles.tropics.bonk": "Bonk!",
 

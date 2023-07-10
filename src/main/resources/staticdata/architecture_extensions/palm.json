@@ -1,0 +1,19 @@
+{
+  "only_if_present": null,
+  "name": "palm",
+  "base_block": "tropics:palm_log",
+  "textures": "wood_with_log",
+  "recipes": "sawing",
+  "map_color": "sand",
+  "types_to_generate": [
+    "facade",
+    "beam",
+    "fence_post",
+    "joist",
+    "crown_molding",
+    "post_cap",
+    "post_lantern",
+    "lattice",
+    "transom"
+  ]
+}
