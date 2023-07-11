@@ -29,5 +29,7 @@
 
   "subtitles.tropics.bonk": "Bonk!",
 
-  "death.attack.tropics.coconut": "%s was bonked too hard"
+  "death.attack.tropics.coconut": "%s was bonked too hard",
+
+  "architecture_extensions.grouped_block.palm": "Palm"
 }

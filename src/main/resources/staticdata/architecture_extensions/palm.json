@@ -7,6 +7,9 @@
   "map_color": "sand",
   "types_to_generate": [
     "facade",
+    "round_fence_post",
+    "round_arch",
+    "octagonal_column",
     "beam",
     "fence_post",
     "joist",

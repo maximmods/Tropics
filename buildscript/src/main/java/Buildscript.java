@@ -48,7 +48,7 @@ public class Buildscript extends SimpleFabricProject {
 
 		Fmj.DEPENDS.put("fabricloader", ">=0.14.21");
 		Fmj.DEPENDS.put("minecraft", ">=1.20 <1.21");
-		Fmj.DEPENDS.put("fabric-api", ">=0.84.0");
+		Fmj.DEPENDS.put("fabric-api", ">=0.83.0");
 
 		try {
 			Path path = getResourcesDir().resolve("fabric.mod.json");
