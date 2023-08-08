@@ -1,0 +1,35 @@
+{
+  "itemGroup.tropics.item_group": "Тропіки",
+
+  "block.tropics.palm_planks": "Пальмові дошки",
+  "block.tropics.palm_log": "Пальмова колода",
+  "block.tropics.palm_wood": "Пальмова деревина",
+  "block.tropics.stripped_palm_log": "Обтесана пальмова колода",
+  "block.tropics.stripped_palm_wood": "Обтесана пальмова деревина",
+  "block.tropics.palm_slab": "Пальмова плита",
+  "block.tropics.palm_stairs": "Пальмові сходи",
+  "block.tropics.palm_fence": "Пальмовий паркан",
+  "block.tropics.palm_fence_gate": "Пальмова хвіртка",
+  "block.tropics.palm_door": "Пальмові двері",
+  "block.tropics.palm_button": "Пальмова кнопка",
+  "block.tropics.palm_pressure_plate": "Пальмова натискна плита",
+  "block.tropics.palm_trapdoor": "Пальмовий люк",
+  "block.tropics.palm_sign": "Пальмова табличка",
+  "block.tropics.palm_hanging_sign": "Пальмова вивіска",
+  "block.tropics.palm_leaves": "Пальмове листя",
+  "block.tropics.palm_sapling": "Паросток пальми",
+  "block.tropics.coconut": "Кокос",
+
+  "item.tropics.cracked_coconut": "Тріснутий кокос",
+  "item.tropics.coconut_shell": "Кокосова шкарлупа",
+  "item.tropics.palm_boat": "Пальмовий човен",
+  "item.tropics.palm_chest_boat": "Пальмовий човен зі скринею",
+
+  "tag.tropics.palm_logs": "Пальмові колоди",
+
+  "subtitles.tropics.bonk": "Удар!",
+
+  "death.attack.tropics.coconut": "%s надто сильно вдарило",
+
+  "architecture_extensions.grouped_block.palm": "Пальма"
+}
