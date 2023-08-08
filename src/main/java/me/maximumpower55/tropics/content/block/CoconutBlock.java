@@ -67,13 +67,14 @@ public class CoconutBlock extends HorizontalDirectionalBlock implements SimpleWa
 
 	@Override
 	public void onProjectileHit(Level level, BlockState state, BlockHitResult hit, Projectile projectile) {
+		if (level.isClientSide) return;
 		if (state.getValue(ATTACHED)) fall(state, level, hit.getBlockPos());
 	}
 
 	@Override
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
 								 BlockHitResult hit) {
-		if (!level.isClientSide && player.getAbilities().mayBuild && player.getItemInHand(hand).isEmpty() && !state.getValue(ATTACHED)) {
+		if (!level.isClientSide && player.mayBuild() && player.getItemInHand(hand).isEmpty() && !state.getValue(ATTACHED)) {
 			ItemStack itemStack = new ItemStack(TItems.COCONUT);
 
 			if (player.getInventory().add(itemStack)) {
